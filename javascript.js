@@ -20,25 +20,59 @@ function createBoard(size=3){
 
 function addClickEvent(player1, player2)
 {
+    let dialog = document.querySelector("dialog");
+    let actualPattern = [];
     const containerChild = document.querySelectorAll(".grid")
     containerChild.forEach((element,index) => {
         element.addEventListener("click", () => {
             if(element.textContent == '')
             {
                 if(player1.getTurn())
+                {
+                    element.textContent = `${player1.marker}`;
+                    player1.switchTurn();
+                    player2.switchTurn();
+                    actualPattern = getActualPattern();
+                    let actualWinninPattern = getWinningPattern(actualPattern);
+                    let player1Winning = getWinningPattern(player1.pattern());
+                    console.log(player1Winning)
+                    console.log(actualWinninPattern);
+
+                    if(Won(actualWinninPattern, player1Winning))
                     {
-                        element.textContent = `${player1.marker}`;
-                        player1.switchTurn();
-                        player2.switchTurn();
+                        dialog.textContent = "Player 1 won";
+                        dialog.showModal();
                     }
-                    else if(player2.getTurn())
+                    else
                     {
-                        element.textContent = `${player2.marker}`;
-                        player1.switchTurn();
-                        player2.switchTurn();
+                        console.log("no 1");
+                        console.log(Won(actualWinninPattern, player1Winning))
                     }
+
+                }
+                else if(player2.getTurn())
+                {
+                    element.textContent = `${player2.marker}`;
+                    player1.switchTurn();
+                    player2.switchTurn();
+                    actualPattern = getActualPattern();
+                    let actualWinninPattern = getWinningPattern(actualPattern);
+                    let player2Winning = getWinningPattern(player2.pattern());
+                    console.log(player2Winning);
+                    console.log(actualWinninPattern);
+                    if(Won(actualWinninPattern, player2Winning))
+                    {
+                        dialog.textContent = "Player 2 won";
+                        dialog.showModal();
+                    }
+                    else
+                    {
+                        console.log("no 2");
+                        console.log(Won(actualWinninPattern, player2Winning))
+                    }
+                }
             }
-            console.log(`player1 ${player1.getTurn()} player2 ${player2.getTurn()}`)
+            console.log(`player1 ${player1.getTurn()} player2 ${player2.getTurn()}`);
         })
         
     });
@@ -53,19 +87,54 @@ function createPlayer(name,marker){
     const getTurn = () => myturn;
     const increaseScore = () => score++;
     const switchTurn = () => myturn = !myturn;
-    return {name, marker, getScore, increaseScore, getTurn, switchTurn};
+    const pattern = () => [marker, marker, marker, marker, marker, marker, marker, marker, marker];
+    return {name, marker, getScore, increaseScore, getTurn, switchTurn, pattern};
 }
-function getWinningPattern(){
+function getWinningPattern(actualPattern){
+    const winningPatterns = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    const board = document.querySelector("#board");
+    
+    const result = winningPatterns.map(pattern => 
+        pattern.map(index => actualPattern[index])
+      );
+    return result;
+}
+function getActualPattern(){
+    let actualPattern = [];
+    const boardGrid = document.querySelectorAll(".grid");
+    boardGrid.forEach(element => {
+        actualPattern.push(element.textContent);
+    }); 
+    return actualPattern;
+}
+function Won(actualPattern, winningPatterns) {
+    let status = false;
+    
+    for(let i = 0; i < actualPattern.length; i++)
+    {
+        for(let j = 0; j < winningPatterns.length; j++)
+        {
+            console.log(actualPattern[i]);
+            console.log(winningPatterns[i])
+            if(JSON.stringify(actualPattern[i]) === JSON.stringify(winningPatterns[j])){
+                status = true;
+                break;
+            }
+        }
+        if(status)
+            break;
+    }
+    return status;
+}
 
-}
-function iWon(player1){
-    const horizontal = "";
 
-}
 function main () {
     player1 = createPlayer("Player1", "〇");
     player2 = createPlayer("Player2", "⛌");
     player2.switchTurn();
+    const restart = document.querySelector('#start');
+    restart.addEventListener("click",() => {
+    })
     
     createBoard();
     addClickEvent(player1, player2);
