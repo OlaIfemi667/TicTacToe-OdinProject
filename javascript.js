@@ -22,7 +22,7 @@ function addClickEvent(player1, player2)
 {
     let dialog = document.querySelector("dialog");
     let actualPattern = [];
-    const containerChild = document.querySelectorAll(".grid")
+    const containerChild = document.querySelectorAll(".grid");
     containerChild.forEach((element,index) => {
         element.addEventListener("click", () => {
             if(element.textContent == '')
@@ -41,7 +41,8 @@ function addClickEvent(player1, player2)
                     if(Won(actualWinninPattern, player1Winning))
                     {
                         dialog.textContent = "Player 1 won";
-                        dialog.showModal();
+                        dialog.show();
+                        restart();
                     }
                     else
                     {
@@ -63,7 +64,8 @@ function addClickEvent(player1, player2)
                     if(Won(actualWinninPattern, player2Winning))
                     {
                         dialog.textContent = "Player 2 won";
-                        dialog.showModal();
+                        dialog.show();
+                        restart();
                     }
                     else
                     {
@@ -76,6 +78,10 @@ function addClickEvent(player1, player2)
         })
         
     });
+    const start = document.querySelector('#start');
+    start.addEventListener("click",() => {
+        restart(player1, player2);
+    })
     console.log("Hover applied")
 
 }
@@ -87,8 +93,9 @@ function createPlayer(name,marker){
     const getTurn = () => myturn;
     const increaseScore = () => score++;
     const switchTurn = () => myturn = !myturn;
+    const setTurn = (turn) => myturn = turn;
     const pattern = () => [marker, marker, marker, marker, marker, marker, marker, marker, marker];
-    return {name, marker, getScore, increaseScore, getTurn, switchTurn, pattern};
+    return {name, marker, getScore, increaseScore, getTurn, switchTurn, pattern, setTurn};
 }
 function getWinningPattern(actualPattern){
     const winningPatterns = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
@@ -127,18 +134,24 @@ function Won(actualPattern, winningPatterns) {
     return status;
 }
 
+function restart(player1, player2){
+    let dialog = document.querySelector("dialog");
+    const containerChild = document.querySelectorAll(".grid");
+    containerChild.forEach(element => {
+        element.textContent = "";
+    });
+    dialog.close();
+    player1.setTurn(true);
+    player2.setTurn(false);
+}
 
-function main () {
-    player1 = createPlayer("Player1", "〇");
-    player2 = createPlayer("Player2", "⛌");
-    player2.switchTurn();
-    const restart = document.querySelector('#start');
-    restart.addEventListener("click",() => {
-    })
+function main () { 
+    let player1 = createPlayer("Player1", "〇");
+    let player2 = createPlayer("Player2", "⛌");
     
+    player2.switchTurn();
     createBoard();
     addClickEvent(player1, player2);
-    
 }
 
 main();
