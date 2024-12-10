@@ -15,20 +15,16 @@
         <header>
             <div class="neonText yuji-mai-regular" >Blur TIC-TAC-TOE</div>
         </header>
-        <dialog class="neonText yuji-mai-regular" id="gettingName">
-            <form action="">
-                <label for="player1">Player1</label>
-                <input type="text" name="player1" required>
-                <label for="player2">Player2</label>
-                <input type="text" name="player2" required>
-                <button type="submit">OK!!</button>
-            </form>
-        </dialog>
+        
         <main>
+            <div class="neonText yuji-mai-regular"><p id="turn"></p></div>
             <div id="board"></div>
-            <div id="score"></div>
+            <div id="score" class="neonText yuji-mai-regular">
+                <p id="player1Score"></p>
+                <p id="player2Score"></p>
+            </div>
+            <div class="neonText yuji-mai-regular" id="whoWon"></dialog>
         </main>
-        <dialog class="neonText yuji-mai-regular" ></dialog>
         <footer>
             <button type="button" id="start" class="neonText"> Start</button>
         </footer>

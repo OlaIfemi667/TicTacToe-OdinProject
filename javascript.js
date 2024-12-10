@@ -20,7 +20,8 @@ function createBoard(size=3){
 
 function addClickEvent(player1, player2)
 {
-    let dialog = document.querySelector("dialog");
+    let displayTurn = document.querySelector("#turn");
+    let whowon = document.querySelector("#whoWon");
     let actualPattern = [];
     const containerChild = document.querySelectorAll(".grid");
     containerChild.forEach((element,index) => {
@@ -29,6 +30,7 @@ function addClickEvent(player1, player2)
             {
                 if(player1.getTurn())
                 {
+                    displayTurn.textContent = `It is ${player1.name} turn`;
                     element.textContent = `${player1.marker}`;
                     player1.switchTurn();
                     player2.switchTurn();
@@ -40,19 +42,22 @@ function addClickEvent(player1, player2)
 
                     if(Won(actualWinninPattern, player1Winning))
                     {
-                        dialog.textContent = "Player 1 won";
-                        dialog.show();
-                        restart();
+                        whowon.textContent = `${player1.name} WON!!!!`;                        restart(player1, player2);
                     }
                     else
                     {
                         console.log("no 1");
-                        console.log(Won(actualWinninPattern, player1Winning))
+                        console.log(Won(actualWinninPattern, player1Winning));
+                        if(isFull()){
+                            whowon.textContent = "It is a draw";
+                            restart(player1, player2);
+                        }
                     }
 
                 }
                 else if(player2.getTurn())
                 {
+                    displayTurn.textContent = `It is ${player2.name} turn`
                     element.textContent = `${player2.marker}`;
                     player1.switchTurn();
                     player2.switchTurn();
@@ -63,14 +68,17 @@ function addClickEvent(player1, player2)
                     console.log(actualWinninPattern);
                     if(Won(actualWinninPattern, player2Winning))
                     {
-                        dialog.textContent = "Player 2 won";
-                        dialog.show();
-                        restart();
+                        whowon.textContent = `${player2.name} WON!!!!`;
+                        restart(player1, player2);
                     }
                     else
                     {
                         console.log("no 2");
-                        console.log(Won(actualWinninPattern, player2Winning))
+                        console.log(Won(actualWinninPattern, player2Winning));
+                        if(isFull()){
+                            whowon.textContent = "It is a draw";
+                            restart(player1, player2);
+                        }
                     }
                 }
             }
@@ -85,7 +93,16 @@ function addClickEvent(player1, player2)
     console.log("Hover applied")
 
 }
-
+function isFull(){
+    const containerChild = document.querySelectorAll(".grid");
+    let status = true;
+    containerChild.forEach(element => {
+        if(element.textContent == ""){
+            status = false;
+        }
+    });
+    return status;
+}
 function createPlayer(name,marker){
     let score = 0;
     let myturn = true;
@@ -135,23 +152,29 @@ function Won(actualPattern, winningPatterns) {
 }
 
 function restart(player1, player2){
-    let dialog = document.querySelector("dialog");
     const containerChild = document.querySelectorAll(".grid");
     containerChild.forEach(element => {
         element.textContent = "";
     });
-    dialog.close();
     player1.setTurn(true);
     player2.setTurn(false);
 }
 
 function main () { 
-    let player1 = createPlayer("Player1", "〇");
-    let player2 = createPlayer("Player2", "⛌");
+    let name1 = prompt("Player 1 name");
+    let name2 = prompt("Player 2 name");
+
+    let score1 = document.querySelector("#player1Score");
+    let score2 = document.querySelector("#player2Score");
+    let player1 = createPlayer(name1, "〇");
+    let player2 = createPlayer(name2, "⛌");
     
+
     player2.switchTurn();
     createBoard();
     addClickEvent(player1, player2);
+    score1.textContent = `${player1.name} ${player1.getScore()}`;
+    score2.textContent = `${player2.name} ${player2.getScore()}`
 }
 
 main();
