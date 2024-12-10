@@ -30,7 +30,7 @@ function addClickEvent(player1, player2)
             {
                 if(player1.getTurn())
                 {
-                    displayTurn.textContent = `It is ${player1.name} turn`;
+                    displayTurn.textContent = `It is ${player2.name} turn`;
                     element.textContent = `${player1.marker}`;
                     player1.switchTurn();
                     player2.switchTurn();
@@ -42,7 +42,9 @@ function addClickEvent(player1, player2)
 
                     if(Won(actualWinninPattern, player1Winning))
                     {
-                        whowon.textContent = `${player1.name} WON!!!!`;                        restart(player1, player2);
+                        whowon.textContent = `${player1.name} WON!!!!`;
+                        player1.increaseScore();
+                        restart(player1, player2);
                     }
                     else
                     {
@@ -57,7 +59,7 @@ function addClickEvent(player1, player2)
                 }
                 else if(player2.getTurn())
                 {
-                    displayTurn.textContent = `It is ${player2.name} turn`
+                    displayTurn.textContent = `It is ${player1.name} turn`
                     element.textContent = `${player2.marker}`;
                     player1.switchTurn();
                     player2.switchTurn();
@@ -69,6 +71,7 @@ function addClickEvent(player1, player2)
                     if(Won(actualWinninPattern, player2Winning))
                     {
                         whowon.textContent = `${player2.name} WON!!!!`;
+                        player2.increaseScore();
                         restart(player1, player2);
                     }
                     else
@@ -152,17 +155,25 @@ function Won(actualPattern, winningPatterns) {
 }
 
 function restart(player1, player2){
+    let score1 = document.querySelector("#player1Score");
+    let score2 = document.querySelector("#player2Score");
     const containerChild = document.querySelectorAll(".grid");
     containerChild.forEach(element => {
         element.textContent = "";
     });
     player1.setTurn(true);
     player2.setTurn(false);
+    score1.textContent = `${player1.name} ${player1.getScore()}`;
+    console.log(`player 1 score ${player1.getScore()}`)
+    score2.textContent = `${player2.name} ${player2.getScore()}`;
+    console.log(`player 2 score ${player2.getScore()}`)
 }
 
 function main () { 
-    let name1 = prompt("Player 1 name");
-    let name2 = prompt("Player 2 name");
+    let displayTurn = document.querySelector("#turn");
+
+    let name1 = prompt("Player using 〇 name");
+    let name2 = prompt("Player using ⛌ name");
 
     let score1 = document.querySelector("#player1Score");
     let score2 = document.querySelector("#player2Score");
@@ -173,8 +184,10 @@ function main () {
     player2.switchTurn();
     createBoard();
     addClickEvent(player1, player2);
-    score1.textContent = `${player1.name} ${player1.getScore()}`;
-    score2.textContent = `${player2.name} ${player2.getScore()}`
+    displayTurn.textContent = `It is ${player1.name} turn`
+    
+
+
 }
 
 main();
