@@ -8,7 +8,6 @@ function createBoard(size=3){
         {
             let aDiv = document.createElement("div");
             aDiv.setAttribute("class", "grid neonText");
-            aDiv.style.border = "1px solid green";
             
             aDiv.style.width = `${divSize}px`;
             aDiv.style.height = `${divSize}px`;
